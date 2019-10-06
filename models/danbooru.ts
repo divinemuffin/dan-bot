@@ -1,3 +1,10 @@
+/*
+    * GENERAL NOTION
+    * - naming interfaces with I prefix
+    * - naming types with T prefix
+    * - naming enum with E prefix
+*/
+
 export interface IDanPost {
     id: number,
     created_at: string,
@@ -7,6 +14,7 @@ export interface IDanPost {
     image_width: number,
     image_height: number,
     tag_string: string,
+    md5: string,
     file_ext: string,
     parent_id: number,
     has_children: boolean,
@@ -38,3 +46,7 @@ export interface IDanPostError {
     success: boolean,
     message: string
 }
+
+export type TDanRatings = 'explicit' | 'safe' | 'questionable';
+
+export type TDanOrder = 'rank' | 'custom' | 'comment_bumped';

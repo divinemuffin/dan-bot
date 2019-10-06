@@ -1,4 +1,4 @@
-import {IDanPost, IDanPostError} from "../models/danbooru";
+import {IDanPost, IDanPostError, TDanOrder, TDanRatings} from "../models/danbooru";
 import {ClientRequest} from "http";
 
 console.log('[DAN] >> Starting booru.js ...');
@@ -18,21 +18,32 @@ function TEST(do_save: boolean = false): void {
 
     console.log('Link: ', post.large_file_url);
 
-    // Get post's url and create a filename for it
-    const url = booru.url(post.file_url);
-
-    // Download post image using node's https and fs libraries
-    https.get(url, (response) => {
-      if (response && do_save) {
-        saveFile(response, post.md5, post.file_ext);
-      }
-    });
+    if (do_save){
+      saveFile([post]);
+    }
   });
 }
 
-function getFile(): Array<IDanPost> {
-  return booru.posts({tags: 'rating:explicit order:rank'}).then((res: Array<IDanPost>) => {
+function getPostsInfo(params?: {
+  rating?: TDanRatings,
+  order?: TDanOrder
+}): Array<IDanPost> {
+  let postParams;
+  if (params) {
+    let paramsArray: Array<string> = [];
 
+    for (let paramsKey in params) {
+      paramsArray.push(`${paramsKey}:${params[paramsKey]}`);
+    }
+
+    postParams = {tags: paramsArray.join(' ')};
+  } else {
+    console.warn(`[DAN] >> @getFile(): getting random picture ...`)
+  }
+
+  return booru.posts(postParams).then((res: Array<IDanPost>) => {
+
+    // sometimes res can be as Error: IDanPostError. If so must throw exception
     if ((res as unknown as IDanPostError).success === false) {
       console.error(`[DAN] >> Error @getFile(): ${(res as unknown as IDanPostError).message}`);
       return;
@@ -42,26 +53,49 @@ function getFile(): Array<IDanPost> {
   }).catch(e => console.error(`[DAN] >> Error: ${e.message} \n`, e));
 }
 
+function getPostsFileStream(posts: Array<IDanPost>): Array<ClientRequest> {
+  return posts.map(post => {
+    // Get post's url and create a filename for it
+    const url = booru.url(post.file_url);
+    // Download post image using node's https and fs libraries
+    return https.get(url, (response) => {
+      if (response) {
+        return response
+      }
+    });
+  })
+}
+
 /**
  * Saves file to ./saves.
- * @param {ClientRequest} data data for this file.
- * @param {string} name name of this file.
- * @param {string} ext extension of this file (no dot).
+ * @param {Array<IDanPost>} posts array of posts.
  */
-function saveFile(data: ClientRequest, name: string, ext: string): void {
+function saveFile(posts: Array<IDanPost>): void {
   const dir = './saves';
   const files = fs.readdirSync(dir);
   const filesCount = ++files.length;
-  const fileName = `${name}.${ext}`;
-  const existing = files.filter(file => file === `${name}.${ext}`);
 
-  if (existing.length) {
-    console.warn(`[DAN] >> File "${fileName}" already exists! Rewriting.`);
+  if (posts && Array.isArray(posts)) {
+    posts.forEach(post => {
+      const fileName = `${post.md5}.${post.file_ext}`;
+      const existing = files.filter(file => file === fileName);
+
+      if (existing.length) {
+        console.warn(`[DAN] >> File "${fileName}" already exists! Rewriting.`);
+      }
+
+      console.log(`[DAN] >> Saving file #${filesCount} - "${fileName}" ...`);
+
+      // Get post's url and create a filename for it
+      const url = booru.url(post.file_url);
+
+      // Download post image using node's https and fs libraries
+      https.get(url, (response) => {
+        response.pipe(fs.createWriteStream(`${dir}/${fileName}`));
+        console.log('The file has been saved!');
+      })
+    })
   }
-
-  console.log(`[DAN] >> Saving file #${filesCount} - "${fileName}" ...`);
-  data.pipe(fs.createWriteStream(`${dir}/${name}.${ext}`));
-  console.log('The file has been saved!');
 }
 
 
@@ -72,8 +106,16 @@ console.log('[DAN] >> main() execution...', '\n\n\n');
 
   TEST();
 
-  let res: Array<IDanPost> = await getFile();
+  let postsInfo: Array<IDanPost> = await getPostsInfo({rating: "explicit", order: "rank"});
 
-  console.log("GET FILE res: ", res.length, res.map(post => post.file_url));
+  // console.log("GET INFO res: \n\n", postsInfo.length, postsInfo.map(postInfoObj => postInfoObj.file_url));
+
+  await getPostsFileStream(postsInfo);
+
+  // console.log("GET STREAM res: \n\n", postsStream.length, postsStream.map((postStream, i) => {
+  //   return `Stream #${i} is writable: ${postStream.writable}`;
+  // }));
 
 })();
+
+export {getPostsInfo, getPostsFileStream, saveFile};
