@@ -18,14 +18,14 @@ const bot = new TelegramBot(token, {polling: true});
 
 const mongoose = require('mongoose');
 // connecting DB to env variable
-mongoose.connect(process.env.DATABASE_URL, {useNewUrlParser: true}).catch((error) => {
-  console.error(error);
+mongoose.connect(process.env.DATABASE_URL, {useUnifiedTopology: true, useNewUrlParser: true}).catch((error) => {
+  console.error(`[DAN] >> Error: failed to connect to Mongo DB! \n`, error);
 });
 
 // accessing connection to DB
 const db = mongoose.connection;
 
-db.on('error', (error) => console.error(error));
+db.on('error', (error) =>  console.error(`[DAN] >> Error: Mongo DB failed \n`, error));
 db.once('open', () => console.info('Connected to Mongoose DB!'));
 
 module.exports = {bot, db};

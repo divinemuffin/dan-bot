@@ -13,13 +13,16 @@
   "author": "Andy",
   "license": "ISC",
   "dependencies": {
-    "danbooru": "^3.1.0"
+    "danbooru": "^3.1.0",
+    "mongoose": "^5.7.7",
+    "node-telegram-bot-api": "^0.40.0"
   },
   "devDependencies": {
     "@types/node": "^12.7.5",
     "@typescript-eslint/eslint-plugin": "^2.3.0",
     "@typescript-eslint/parser": "^2.3.0",
-    "eslint": "^6.4.0",
+    "dotenv": "^8.2.0",
+    "eslint": "^6.6.0",
     "eslint-config-google": "^0.14.0",
     "nodemon": "^1.19.2",
     "ts-node": "^8.4.1",

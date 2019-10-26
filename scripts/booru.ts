@@ -58,11 +58,7 @@ function getPostsFileStream(posts: Array<IDanPost>): Array<ClientRequest> {
     // Get post's url and create a filename for it
     const url = booru.url(post.file_url);
     // Download post image using node's https and fs libraries
-    return https.get(url, (response) => {
-      if (response) {
-        return response
-      }
-    });
+    return https.get(url).on('error', (err) => { console.log(err) });
   })
 }
 
@@ -110,7 +106,7 @@ console.log('[DAN] >> main() execution...', '\n\n\n');
 
   // console.log("GET INFO res: \n\n", postsInfo.length, postsInfo.map(postInfoObj => postInfoObj.file_url));
 
-  await getPostsFileStream(postsInfo);
+  getPostsFileStream(postsInfo);
 
   // console.log("GET STREAM res: \n\n", postsStream.length, postsStream.map((postStream, i) => {
   //   return `Stream #${i} is writable: ${postStream.writable}`;
