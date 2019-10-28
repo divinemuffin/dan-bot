@@ -1,9 +1,11 @@
 const chalk = require('chalk');
 
 export class DanConsole {
-    public constructor() {
-
+    public constructor(enableLogs: boolean = false) {
+        this.enableLogs = enableLogs;
     }
+
+    private enableLogs: boolean;
 
     public error = function (...args) {
         const title = chalk.bgRed.black('[DAN] >> Error: ');
@@ -11,12 +13,16 @@ export class DanConsole {
     };
 
     public warn = function (...args) {
-        const title = chalk.bgYellow.black('[DAN] >> Warning: ');
-        console.warn(title, chalk.yellow(...args));
+        if (this.enableLogs) {
+            const title = chalk.bgYellow.black('[DAN] >> Warning: ');
+            console.warn(title, chalk.yellow(...args));
+        }
     };
 
     public info = function (...args) {
-        const title = chalk.bgCyan.black('[DAN] >> FYI: ');
-        console.info(title, chalk.cyan(...args));
+        if (this.enableLogs) {
+            const title = chalk.bgCyan.black('[DAN] >> FYI: ');
+            console.info(title, chalk.cyan(...args));
+        }
     };
 }
