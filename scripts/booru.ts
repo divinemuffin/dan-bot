@@ -100,13 +100,13 @@ function saveFile(posts: Array<IDanPost>): void {
 console.log('[DAN] >> main() execution...', '\n\n\n');
 (async function main () {
 
-  TEST();
+  // TEST();
 
-  let postsInfo: Array<IDanPost> = await getPostsInfo({rating: "explicit", order: "rank"});
+  // let postsInfo: Array<IDanPost> = await getPostsInfo({rating: "explicit", order: "rank"});
 
   // console.log("GET INFO res: \n\n", postsInfo.length, postsInfo.map(postInfoObj => postInfoObj.file_url));
 
-  getPostsFileStream(postsInfo);
+  // getPostsFileStream(postsInfo);
 
   // console.log("GET STREAM res: \n\n", postsStream.length, postsStream.map((postStream, i) => {
   //   return `Stream #${i} is writable: ${postStream.writable}`;

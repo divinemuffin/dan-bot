@@ -1,4 +1,5 @@
 const chalk = require('chalk');
+const minimist = require('minimist');
 
 export class DanConsole {
     public constructor(enableLogs: boolean = false) {
@@ -55,6 +56,40 @@ export class DanUtils {
                 return acc.concat(val)
             }
         }, []);
+    }
+
+
+    public parseCommand(string: string) {
+        const command = string.split(' ');
+        const base = command.shift();
+
+        return {
+            base,
+            parameters: minimist(command)
+        }
+    }
+}
+
+export class DanMemory {
+
+    public set(parameter: {[key: string]: string}): void {
+        const lastSetting = this.getAll();
+        const parKey = Object.keys(parameter)[0];
+        console.log('Saving: ', parKey, parameter[parKey]);
+
+        process.env.DAN_SETTING = JSON.stringify({
+            ...lastSetting,
+            [parKey]: parameter[parKey]
+        });
+    }
+
+    public get(value: string): string {
+        return JSON.parse(process.env.DAN_SETTING)[value];
+    }
+
+    public getAll(): {[key: string]: string} {
+        console.log('Getting all: ', process.env.DAN_SETTING);
+        return process.env.DAN_SETTING? JSON.parse(process.env.DAN_SETTING) : {};
     }
 }
 
