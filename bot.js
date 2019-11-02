@@ -30,3 +30,5 @@ db.on('error', (error) => console.error(`[DAN] >> Error: Mongo DB failed \n`, er
 db.once('open', () => console.info('Connected to Mongoose DB!'));
 
 module.exports = {bot, db};
+
+

@@ -4,7 +4,7 @@
   "description": "bot for automatic reposting images from danbooru to telegram channel",
   "main": "bot.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "nodemon scripts/core.ts"
   },
   "keywords": [
     "bot",
