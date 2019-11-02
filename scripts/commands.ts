@@ -4,6 +4,7 @@
 import {IDanPost} from "../models/danbooru";
 import {MPost} from "../models/schemas";
 import {DanConsole, DanMemory, DanUtils} from "./__utils";
+import {LIMIT_FOR_TAGS} from "../models/constants";
 
 const dansole = new DanConsole(true);
 const danUtils = new DanUtils();
@@ -29,6 +30,7 @@ function c_start(msg) {
                 resize_keyboard: true,
                 one_time_keyboard: false,
                 keyboard: [
+                    [{text: '\/help'}],
                     [{text: '\/info'}, {text: '\/pic'}],
                     [{text: '\/post'}],
                 ],
@@ -104,6 +106,7 @@ async function c_post(msg) {
     let selectedPost: IDanPost;
     // let posts: Array<IDanPost> = [];
     let sortedPosts: Array<IDanPost> = [];
+    const postPreferences = danMemory.getAll();
 
     // let collectionName: string;
     // let modelDocument;
@@ -117,7 +120,7 @@ async function c_post(msg) {
     // pulls a pack of 20 posts and sorts them
     async function refreshPosts() {
         // [1] getting pack of posts
-        const _posts = await getPostsInfo();
+        const _posts = await getPostsInfo(postPreferences);
         // [2] sorting by best (higher up score)
         sortedPosts = await sortByScore(_posts);
 
@@ -189,13 +192,21 @@ async function c_post(msg) {
         // [5] posting to channel
         bot.sendPhoto(CHANNEL_ID, selectedPost.large_file_url, { caption: `${selectedPost.md5}.${selectedPost.file_ext}` }).then(() => {
             // [6] sending report to owner
-            bot.sendMessage(
-                chatId, ` \n
+            let info = ` \n
             ✅ Picture ${selectedPost.md5} was posted. \n 
             📋 To collection: ${collectionName}. \n
             🔁 Cycles performed: ${postsRefreshedCounter}. \n 
             Selected picture from last cycle is #${selectedPostIndex} \n
-            🕓 Posted at: ${new Date().toUTCString()}`
+            🕓 Posted at: ${new Date().toUTCString()}`;
+
+            const preferences = danMemory.getAll();
+
+            if (Object.keys(preferences).length) {
+                info = info.concat(` \n\n⚙ With preferences: ${JSON.stringify(preferences)} and increased limit to ${LIMIT_FOR_TAGS}`);
+            }
+
+            bot.sendMessage(
+                chatId, info
             ).catch(e => dansole.error(e));
         }).catch(e => {
             dansole.error(e);
@@ -220,7 +231,6 @@ async function c_post(msg) {
  */
 function c_set(msg) {
     const chatId = msg.chat.id;
-    const allowedParams = ['rating', 'order', 'frequency'];
 
     const parameters = danUtils.parseCommand(msg.text).parameters;
 
@@ -235,7 +245,7 @@ function c_set(msg) {
     delete parameters['_'];
 
     for (const key in parameters) {
-        if (parameters.hasOwnProperty(key) && allowedParams.find(name => name === key)) {
+        if (parameters.hasOwnProperty(key) && danMemory.allowedParams.find(name => name === key)) {
             danMemory.set({[key]: parameters[key]});
         } else {
             bot.sendMessage(chatId, `${key} parameter not allowed`);

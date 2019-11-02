@@ -71,6 +71,7 @@ export class DanUtils {
 }
 
 export class DanMemory {
+    public allowedParams = ['rating', 'order', 'frequency'];
 
     public set(parameter: {[key: string]: string}): void {
         const lastSetting = this.getAll();

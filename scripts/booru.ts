@@ -1,5 +1,8 @@
 import {IDanPost, IDanPostError, TDanOrder, TDanRatings} from "../models/danbooru";
 import {ClientRequest} from "http";
+import {DanConsole} from "./__utils";
+import {LIMIT_FOR_TAGS} from "../models/constants";
+const dansole = new DanConsole(true);
 
 console.log('[DAN] >> Starting booru.js ...');
 
@@ -36,21 +39,23 @@ function getPostsInfo(params?: {
       paramsArray.push(`${paramsKey}:${params[paramsKey]}`);
     }
 
-    postParams = {tags: paramsArray.join(' ')};
+    postParams = {tags: paramsArray.join(' '), limit: LIMIT_FOR_TAGS};
+    dansole.info(`Parameters for searching: `);
+    console.dir(postParams);
   } else {
-    console.warn(`[DAN] >> @getFile(): getting random picture ...`)
+    dansole.warn(`[DAN] >> @getFile(): getting random picture ...`)
   }
 
   return booru.posts(postParams).then((res: Array<IDanPost>) => {
 
     // sometimes res can be as Error: IDanPostError. If so must throw exception
     if ((res as unknown as IDanPostError).success === false) {
-      console.error(`[DAN] >> Error @getFile(): ${(res as unknown as IDanPostError).message}`);
+      dansole.error(`[DAN] >> Error @getFile(): ${(res as unknown as IDanPostError).message}`);
       return;
     }
 
     return res;
-  }).catch(e => console.error(`[DAN] >> Error: ${e.message} \n`, e));
+  }).catch(e => dansole.error(`${e.message} \n`, e));
 }
 
 function getPostsFileStream(posts: Array<IDanPost>): Array<ClientRequest> {
