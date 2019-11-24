@@ -4,7 +4,8 @@
   "description": "bot for automatic reposting images from danbooru to telegram channel",
   "main": "bot.js",
   "scripts": {
-    "start": "nodemon scripts/core.ts"
+    "start": "nodemon scripts/core.ts",
+    "build": "webpack --mode production"
   },
   "keywords": [
     "bot",
@@ -27,7 +28,12 @@
     "eslint": "^6.6.0",
     "eslint-config-google": "^0.14.0",
     "nodemon": "^1.19.2",
-    "ts-node": "^8.4.1",
-    "typescript": "^3.6.3"
+    "prettier": "^1.19.1",
+    "ts-loader": "^6.2.1",
+    "ts-node": "^8.5.2",
+    "typescript": "^3.6.3",
+    "webpack": "^4.41.2",
+    "webpack-cli": "^3.3.10",
+    "webpack-node-externals": "^1.7.2"
   }
 }

@@ -156,7 +156,7 @@ async function c_post(msg) {
             dansole.info(`Searching ${selectedPost.md5.substr(-4, 4)} in ${collectionName}`);
             dansole.info(res.length, res.map(r => r.md5.substr(-4, 4)));
             return res.length > 0;
-        });
+        }, e => dansole.error(e));
     }
 
     await refreshPosts();

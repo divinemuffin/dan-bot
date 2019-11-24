@@ -10,7 +10,11 @@ export class DanConsole {
 
     public error = function (...args) {
         const title = chalk.bgRed.black('[DAN] >> Error: ');
-        console.error(title, chalk.red(...args));
+        const message = args.shift();
+        const error = new Error(message);
+        const stackLogs = error.stack.split('\n');
+        console.error(`\n\nLogs: ${error.stack}\n\n`)
+        console.error(`${title} ${chalk.red(stackLogs[2].trim())} ${error.message}\n`);
     };
 
     public warn = function (...args) {
