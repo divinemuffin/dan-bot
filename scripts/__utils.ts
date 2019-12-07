@@ -8,23 +8,23 @@ export class DanConsole {
 
     private enableLogs: boolean;
 
-    public error = function (...args) {
+    public error = function (...args: Array<string | Object>) {
         const title = chalk.bgRed.black('[DAN] >> Error: ');
-        const message = args.shift();
+        const message: any = args.shift();
         const error = new Error(message);
         const stackLogs = error.stack.split('\n');
         console.error(`\n\nLogs: ${error.stack}\n\n`)
         console.error(`${title} ${chalk.red(stackLogs[2].trim())} ${error.message}\n`);
     };
 
-    public warn = function (...args) {
+    public warn = function (...args: Array<string | Object>) {
         if (this.enableLogs) {
             const title = chalk.bgYellow.black('[DAN] >> Warning: ');
             console.warn(title, chalk.yellow(...args));
         }
     };
 
-    public info = function (...args) {
+    public info = function (...args: Array<string | Object>) {
         if (this.enableLogs) {
             const title = chalk.bgCyan.black('[DAN] >> FYI: ');
             console.info(title, chalk.cyan(...args));
