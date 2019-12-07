@@ -15,9 +15,9 @@ const danMemory = new DanMemory();
 
 
 const mongoose = require('mongoose');
-const {bot} = require('../bot');
+const {bot} = require('./bot');
 const {getPostsInfo} = require('./booru');
-const {setCommand} = require('./core');
+const {setCommand} = require('../core');
 
 const CHANNEL_ID = process.env.CHANNEL_ID;
 

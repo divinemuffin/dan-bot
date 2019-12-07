@@ -2,7 +2,7 @@
   "name": "dan-bot",
   "version": "1.0.0",
   "description": "bot for automatic reposting images from danbooru to telegram channel",
-  "main": "bot.js",
+  "main": "./core.ts",
   "scripts": {
     "start": "nodemon scripts/core.ts",
     "build": "webpack --mode production"

@@ -6,7 +6,7 @@ module.exports = {
 	externals: [ nodeExternals() ],
 	context: __dirname,
 	devtool: "source-map",
-	entry: "./scripts/core.ts",
+	entry: "./core.ts",
 	module: {
     rules: [
       {

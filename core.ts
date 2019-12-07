@@ -1,8 +1,8 @@
 // ENTRY POINT (start program from here)
 
-import {DanConsole} from './__utils';
+import { DanConsole } from "./scripts/__utils";
 
-const {bot} = require('../bot');
+const {bot} = require('./scripts/bot');
 const dansole = new DanConsole(true);
 
 const minimist = require('minimist');
@@ -29,4 +29,4 @@ module.exports = {
 dansole.info('Core initiated. Loading dependencies ...');
 
 // initiating commands
-require('./commands.ts');
+require('./scripts/commands');

@@ -6,7 +6,7 @@ if (process.env.NODE_ENV !== 'production') {
   require('dotenv').config();
 }
 
-process.env.NTBA_FIX_319 = 1;
+process.env.NTBA_FIX_319 = '1';
 
 // [ BOT CONFIG ]
 
@@ -19,14 +19,14 @@ const bot = new TelegramBot(token, {polling: true});
 const DATABASE_URL = `mongodb+srv://${process.env.DB_USERNAME}:${process.env.DB_PASSWORD}@${process.env.DB_SHARDS}/${process.env.DB_NAME}?retryWrites=true&w=majority`;
 const mongoose = require('mongoose');
 // connecting DB to env variable
-mongoose.connect(DATABASE_URL, {useUnifiedTopology: true, useNewUrlParser: true}).catch((error) => {
+mongoose.connect(DATABASE_URL, {useUnifiedTopology: true, useNewUrlParser: true}).catch((error: Error) => {
   console.error(`[DAN] >> Error: failed to connect to Mongo DB! \n`, error);
 });
 
 // accessing connection to DB
 const db = mongoose.connection;
 
-db.on('error', (error) => console.error(`[DAN] >> Error: Mongo DB failed \n`, error));
+db.on('error', (error: Error) => console.error(`[DAN] >> Error: Mongo DB failed \n`, error));
 db.once('open', () => console.info('Connected to Mongoose DB!'));
 
 module.exports = {bot, db};
