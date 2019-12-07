@@ -4,7 +4,7 @@
   "description": "bot for automatic reposting images from danbooru to telegram channel",
   "main": "./core.ts",
   "scripts": {
-    "start": "nodemon core.ts",
+    "start": "node core.ts",
     "build": "webpack --mode production --output-path public --output-filename dan.js",
     "defroze": "now scale https://danbot.zorkbrenton.now.sh 1"
   },
