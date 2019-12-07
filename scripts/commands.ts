@@ -55,7 +55,7 @@ function c_hello(msg: ITelegramMessage) {
  *  botId
  */
 function c_info(msg: ITelegramMessage) {
-    const chatId = 3;
+    const chatId = msg.chat.id;
     bot.getUpdates().then((res: Array<ITelegramUpdateResponse>) => {
         const botInfoObj = danUtils.flattenArrayOfObjects([
             { botChatId: chatId},
