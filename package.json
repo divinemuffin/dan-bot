@@ -5,7 +5,7 @@
   "main": "./core.ts",
   "scripts": {
     "start": "nodemon scripts/core.ts",
-    "build": "webpack --mode production"
+    "build": "webpack --mode production --output-path public --output-filename dan.js"
   },
   "keywords": [
     "bot",
