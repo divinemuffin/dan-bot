@@ -1,7 +1,9 @@
 import {IDanPost, IDanPostError, TDanOrder, TDanRatings} from "../models/danbooru";
-import {ClientRequest} from "http";
+import {ClientRequest, IncomingMessage} from "http";
 import {DanConsole} from "./__utils";
 import {LIMIT_FOR_TAGS} from "../models/constants";
+import { Dirent } from "fs";
+import { Http2ServerResponse } from "http2";
 const dansole = new DanConsole(true);
 
 console.log('[DAN] >> Starting booru.js ...');
@@ -14,7 +16,7 @@ const fs = require('fs');
 const booru = new Danbooru();
 
 function TEST(do_save: boolean = false): void {
-  booru.posts({tags: 'rating:safe order:rank'}).then((posts) => {
+  booru.posts({tags: 'rating:safe order:rank'}).then((posts: Array<IDanPost>) => {
     // Select a random post from posts array
     const index = Math.floor(Math.random() * posts.length);
     const post = posts[index];
@@ -36,7 +38,7 @@ function getPostsInfo(params?: {
     let paramsArray: Array<string> = [];
 
     for (let paramsKey in params) {
-      paramsArray.push(`${paramsKey}:${params[paramsKey]}`);
+      paramsArray.push(`${paramsKey}:${params[paramsKey as 'rating' | 'order']}`);
     }
 
     postParams = {tags: paramsArray.join(' '), limit: LIMIT_FOR_TAGS};
@@ -53,9 +55,8 @@ function getPostsInfo(params?: {
       dansole.error(`[DAN] >> Error @getFile(): ${(res as unknown as IDanPostError).message}`);
       return;
     }
-
     return res;
-  }).catch(e => dansole.error(`${e.message} \n`, e));
+  });
 }
 
 function getPostsFileStream(posts: Array<IDanPost>): Array<ClientRequest> {
@@ -63,7 +64,7 @@ function getPostsFileStream(posts: Array<IDanPost>): Array<ClientRequest> {
     // Get post's url and create a filename for it
     const url = booru.url(post.file_url);
     // Download post image using node's https and fs libraries
-    return https.get(url).on('error', (err) => { console.log(err) });
+    return https.get(url).on('error', (err: IncomingMessage) => { console.log(err) });
   })
 }
 
@@ -73,7 +74,7 @@ function getPostsFileStream(posts: Array<IDanPost>): Array<ClientRequest> {
  */
 function saveFile(posts: Array<IDanPost>): void {
   const dir = './saves';
-  const files = fs.readdirSync(dir);
+  const files: Array<string | Buffer | Dirent> = fs.readdirSync(dir);
   const filesCount = ++files.length;
 
   if (posts && Array.isArray(posts)) {
@@ -91,7 +92,7 @@ function saveFile(posts: Array<IDanPost>): void {
       const url = booru.url(post.file_url);
 
       // Download post image using node's https and fs libraries
-      https.get(url, (response) => {
+      https.get(url, (response: Http2ServerResponse) => {
         response.pipe(fs.createWriteStream(`${dir}/${fileName}`));
         console.log('The file has been saved!');
       })
