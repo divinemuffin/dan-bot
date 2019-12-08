@@ -1,0 +1,10 @@
+{
+    "env": {
+        "BOT_TOKEN": "@bot_token",
+        "CHANNEL_ID": "@channel_id",
+        "DB_USERNAME": "@db_username",
+        "DB_PASSWORD": "@db_password",
+        "DB_SHARDS": "@db_shards",
+        "DB_NAME": "@db_name"
+    }
+  }
