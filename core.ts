@@ -1,11 +1,18 @@
 // ENTRY POINT (start program from here)
 
-import { DanConsole } from "./scripts/__utils";
+if (process.env.NODE_ENV !== 'production') {
+  // checking if running in production environment.
+  // NODE_ENV will be set by node automatically if so
 
+  // loading dotenv vars to process.env
+  require('dotenv').config();
+}
+
+process.env.NTBA_FIX_319 = '1';
+
+import { DanConsole } from "./scripts/__utils";
 const {bot} = require('./scripts/bot');
 const dansole = new DanConsole(true);
-
-const minimist = require('minimist');
 
 /**
  * Suppose you have Array of objects and you need Array with their values. This function does that

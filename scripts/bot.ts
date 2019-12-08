@@ -1,13 +1,3 @@
-if (process.env.NODE_ENV !== 'production') {
-  // checking if running in production environment.
-  // NODE_ENV will be set by node automatically if so
-
-  // loading dotenv vars to process.env
-  require('dotenv').config();
-}
-
-process.env.NTBA_FIX_319 = '1';
-
 // [ BOT CONFIG ]
 
 const TelegramBot = require('node-telegram-bot-api');
