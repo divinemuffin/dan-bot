@@ -4,7 +4,7 @@
   "description": "bot for automatic reposting images from danbooru to telegram channel",
   "main": "./core.ts",
   "scripts": {
-    "start": "node core.ts",
+    "start": "nodemon core.ts",
     "build": "webpack --mode production --output-path public --output-filename dan.js",
     "zeit": "webpack --mode production --output-path api --output-filename dan.js",
     "defroze": "now scale https://danbot.zorkbrenton.now.sh 1"
@@ -18,6 +18,7 @@
   "dependencies": {
     "danbooru": "^3.1.0",
     "dotenv": "^8.2.0",
+    "express": "^4.17.1",
     "mongoose": "^5.7.7",
     "node-telegram-bot-api": "^0.40.0"
   },
