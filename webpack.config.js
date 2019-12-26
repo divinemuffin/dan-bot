@@ -1,24 +1,42 @@
 const nodeExternals = require('webpack-node-externals');
 const path = require('path');
 
-module.exports = {
-	target:'node',
+var commonConfig = {
+	target: 'node',
 	externals: [ nodeExternals() ],
 	context: __dirname,
 	devtool: "source-map",
-	entry: "./core.ts",
 	module: {
-    rules: [
-      {
-		use: 'ts-loader'
-      },
-    ],
-  },
+		rules: [
+			{
+				use: 'ts-loader'
+			}
+		],
+  	},
 	resolve: {
 		extensions: [ '.tsx', '.ts', '.js' ]
 	},
-	output: {
-		path: path.resolve(__dirname, "./dist"),
-		filename: "dan_bundled.js"
-	}
 }
+
+var serverConfig = Object.assign({}, commonConfig,{
+    name: "server",
+    entry: "./server.ts",
+    output: {
+       path: path.resolve(__dirname, "./api"),
+       filename: "server.js"
+    },
+});
+
+var coreConfig = Object.assign({}, commonConfig, {
+    name: "core",
+    entry: "./core.ts",
+    output: {
+       path: path.resolve(__dirname, "./dist"),
+       filename: "dan_bundled.js"
+    },
+});
+
+module.exports = [
+	coreConfig,
+	serverConfig
+]
