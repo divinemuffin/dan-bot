@@ -6,7 +6,7 @@
   "scripts": {
     "start": "nodemon core.ts",
     "build": "webpack --mode production --output-path public --output-filename dan.js",
-    "zeit": "webpack --mode production --output-path api --output-filename dan.js",
+    "zeit": "webpack --mode production && now --prod",
     "defroze": "now scale https://danbot.zorkbrenton.now.sh 1"
   },
   "keywords": [

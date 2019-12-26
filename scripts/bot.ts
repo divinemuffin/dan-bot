@@ -4,6 +4,8 @@ const TelegramBot = require('node-telegram-bot-api');
 const token = process.env.BOT_TOKEN;
 const bot = new TelegramBot(token, {polling: true});
 
+// @ToDo Separate this bitch into two modules
+
 // [ DB CONFIG ]
 
 const DATABASE_URL = `mongodb+srv://${process.env.DB_USERNAME}:${process.env.DB_PASSWORD}@${process.env.DB_SHARDS}/${process.env.DB_NAME}?retryWrites=true&w=majority`;

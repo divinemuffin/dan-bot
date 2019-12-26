@@ -51,6 +51,18 @@ function c_hello(msg: ITelegramMessage) {
 }
 
 /**
+ * prints received text
+ */
+function c_echo(msg: ITelegramMessage) {
+    console.log("echoing ", msg.text);
+    console.log("whole object ", msg);
+
+    const chatId = msg.chat.id;
+    bot.sendMessage(chatId, `You said: ${msg.text}`).catch((e: IncomingMessage) => console.error(e));
+    console.log("After message sent ... ");
+}
+
+/**
  * prints general information:
  *  botId
  */
@@ -275,7 +287,6 @@ function c_help(msg: ITelegramMessage) {
     `);
 }
 
-
 setCommand('set', (msg: ITelegramMessage) => {
     c_set(msg)
 }, true);
@@ -300,8 +311,11 @@ setCommand('info', (msg: ITelegramMessage) => {
 setCommand('start', (msg: ITelegramMessage) => {
     c_start(msg);
 });
+setCommand('echo', (msg: ITelegramMessage) => {
+    c_echo(msg);
+});
 
-module.exports = {
+export {
     c_help,
     c_start,
     c_link,
@@ -310,4 +324,5 @@ module.exports = {
     c_pic,
     c_post,
     c_set,
+    c_echo
 };

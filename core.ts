@@ -10,7 +10,7 @@ if (process.env.NODE_ENV !== 'production') {
 
 process.env.NTBA_FIX_319 = '1';
 
-import { DanConsole } from "./scripts/__utils";
+import {DanConsole} from "./scripts/__utils";
 const {bot} = require('./scripts/bot');
 const dansole = new DanConsole(true);
 
